@@ -1,0 +1,32 @@
+
+`include "disciplines.vams"
+`include "constants.vams"
+
+module tr(g,d,s);
+
+inout g,d,s;
+electrical g,d,s;
+branch(d,s) tr_ds;
+
+// Parameters
+parameter real un=0.045 from (0:inf);   			// mobility in square meter per volt sec
+parameter real cox= 4.32e-3 from (0:inf);				// Oxide capacitance in Farad per square meter
+parameter real w= 8e-6 from (0:inf); 			// Width
+parameter real l= 0.8e-6 from (0:inf);			// length
+parameter real vt= 0.7 from (-inf:inf);				// threshold voltage
+	
+
+
+analog begin : tr_behav
+
+
+vgs= V(g,s);
+vds=V(d,s);
+
+
+I(d,s)<=0.5*(un*cox)*(w/l)*((2*(vgs-vt)*vds)-vds**2);
+I(d,s)<=0.027*vds*(34.982*(-0.734*vgs-cos(1.472*vds+0.008)+0.425)**2 + 38.139);
+
+end
+endmodule
+
